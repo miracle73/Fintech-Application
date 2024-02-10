@@ -29,7 +29,7 @@ const AppNavigation = () => {
     return (
 
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="Welcome" screenOptions={{ headerShown: false }} >
+            <Stack.Navigator initialRouteName="TokenGenerate" screenOptions={{ headerShown: false }} >
                 <Stack.Screen name="Welcome" component={WelcomeScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Activation" component={ActivationScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Reactivation" component={ReactivationScreen} options={{ headerShown: false }} />
