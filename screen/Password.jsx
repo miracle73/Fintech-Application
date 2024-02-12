@@ -7,6 +7,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import PasswordImage from '../assets/images/pass.png'
 import Fingerprint from '../assets/images/fingerprint.png'
 import FaceID from '../assets/images/FaceId.png'
+import HidePassword from '../assets/images/hidePassword.png'
 import { useNavigation } from '@react-navigation/native';
 
 const Password = () => {
@@ -14,6 +15,13 @@ const Password = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [isEnabled, setIsEnabled] = useState(false);
     const [secondIsEnabled, secondSetIsEnabled] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [secondShowPassword, setSecondShowPassword] = useState(false);
+
+    // Function to toggle the password visibility state
+    const toggleShowPassword = () => {
+        setShowPassword(!showPassword);
+    };
     const navigation = useNavigation();
     const allFieldsFilled = password !== "" && confirmPassword !== "";
 
@@ -23,7 +31,7 @@ const Password = () => {
     const secondToggleSwitch = () => {
         secondSetIsEnabled(previousState => !previousState);
     };
-    
+
     const handleSubmit = () => {
         console.log(`Password: ${password}, Confirm Password: ${confirmPassword}`);
         setPassword('')
@@ -55,7 +63,12 @@ const Password = () => {
                         onChangeText={setPassword}
                         placeholderTextColor="#B2BEBB"
                         keyboardType='numeric'
+                        secureTextEntry={!showPassword}
                     />
+                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={{padding: 10}}>
+                        <Image source={HidePassword} />
+                    </TouchableOpacity>
+
                 </View>
                 <View style={[styles.container]} >
                     <Image source={PasswordImage} />
@@ -66,7 +79,12 @@ const Password = () => {
                         onChangeText={setConfirmPassword}
                         placeholderTextColor="#B2BEBB"
                         keyboardType='numeric'
+                        secureTextEntry={!secondShowPassword}
                     />
+                    <TouchableOpacity onPress={() => setSecondShowPassword(!secondShowPassword)} style={{padding: 10}}>
+                        <Image source={HidePassword} />
+                    </TouchableOpacity>
+
                 </View>
                 <View style={{ paddingHorizontal: 10 }}>
                     <View style={styles.coverContainer}>

@@ -22,6 +22,7 @@ import LinkApp from '../../screen/LinkApp';
 import TransactionPin from '../../screen/TransactionPin';
 import EnterToken from '../../screen/EnterToken';
 import TokenGenerate from '../../screen/TokenGenerate';
+import Loading from '../../screen/Loading';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -29,8 +30,9 @@ const AppNavigation = () => {
     return (
 
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="TokenGenerate" screenOptions={{ headerShown: false }} >
+            <Stack.Navigator initialRouteName="Loading" screenOptions={{ headerShown: false }} >
                 <Stack.Screen name="Welcome" component={WelcomeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name="Loading" component={Loading} options={{ headerShown: false }} />
                 <Stack.Screen name="Activation" component={ActivationScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Reactivation" component={ReactivationScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="TokenGenerate" component={TokenGenerate} options={{ headerShown: false }} />

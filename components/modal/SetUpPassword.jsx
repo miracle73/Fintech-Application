@@ -20,7 +20,7 @@ const SetUpPassword = ({modal, setModal}) => {
                 <Image source={ModalImage} />
                 <Text style={styles.firstText}>Set-up your password</Text>
                 <Text style={styles.secondText}>Secure your e-token by setting-up a password.</Text>
-                <TouchableOpacity style={[styles.button]} onPress={() => navigation.navigate('Home')}>
+                <TouchableOpacity style={[styles.button]} onPress={() => navigation.navigate('Bottom')}>
                     <Text style={styles.thirdText}>Continue</Text>
                 </TouchableOpacity>
             </View>
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         bottom: height * 0.3,
         borderRadius: 30,
         paddingHorizontal: 20,
-        marginHorizontal: 20,
+        marginHorizontal: 40,
         justifyContent: 'center',
         alignItems: 'center'
     },

@@ -1,14 +1,21 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
-import React from 'react'
+import { View, Text, StyleSheet, TouchableOpacity, Image, Animated, Easing } from 'react-native'
+import React, { useState, useEffect, useRef } from 'react'
 import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from '@react-navigation/native';
 import Copy from '../assets/images/copy.png'
 import { MaterialIcons } from '@expo/vector-icons'
+import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 
 const TokenGenerate = () => {
     const navigation = useNavigation();
+
+    const [isPlaying, setIsPlaying] = useState(true);
+    const [duration, setDuration] = useState(10); // Set your desired duration
+   
+
     const handleSubmit = () => {
         console.log("dream")
+        setIsPlaying(false);
     }
     return (
         <View style={{
@@ -32,11 +39,27 @@ const TokenGenerate = () => {
                     <Text style={styles.thirdText}>599</Text>
                 </View>
             </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 70 }}>
+             
+                <CountdownCircleTimer
+                    isPlaying={isPlaying}
+                    duration={duration}
+                    colors={['#A4DC78', '#F7B801', '#FF7650', '#A30000']}
+                    colorsTime={[duration * 0.75, duration * 0.5, duration * 0.25, 0]}
+                    onComplete={() => setIsPlaying(false)}
+                >
+                    {({ remainingTime }) => (
+                        <Text style={styles.timerText}>{Math.ceil(remainingTime)}</Text>
+                    )}
+                </CountdownCircleTimer>
+            </View>
+
+
 
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>
                 <Text style={styles.fifthText}>Regenerate Token</Text>
             </TouchableOpacity>
-            <View style={[styles.coverContainer, {marginTop: 30}]}>
+            <View style={[styles.coverContainer, { marginTop: 30 }]}>
                 <View style={styles.secondContainer}>
                     <Image source={Copy} />
                     <Text style={styles.fourthText}>Copy to clipboard</Text>
@@ -112,7 +135,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: '#B2BEBB',
         borderRadius: 14,
-        marginTop: 300,
+        marginTop: 170,
         marginHorizontal: 30
     },
     fourthText: {
@@ -127,6 +150,22 @@ const styles = StyleSheet.create({
         fontSize: 19,
         fontStyle: "normal",
         color: '#B6F485'
+    },
+    timerContainer: {
+        borderColor: 'red',
+        borderStyle: 'solid',
+        borderWidth: 5,
+        flexDirection: 'row',
+        height: 100,
+        width: 100,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 50,
+    },
+    timerText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#B2BEBB'
     },
 })
 
