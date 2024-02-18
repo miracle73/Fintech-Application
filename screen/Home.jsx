@@ -1,9 +1,34 @@
 import { View, Text, StyleSheet, Image } from 'react-native'
-import React from 'react'
-import { StatusBar } from 'expo-status-bar';
+import React, {useState, useEffect} from 'react'
+import { StatusBar } from 'expo-status-bar'
 import Copy from '../assets/images/copy.png'
+import SetUpPassword from '../components/modal/SetUpPassword'
+import LoggedInModal from '../components/modal/LoggedInModal'
+import { useNavigation } from '@react-navigation/native'
 
-const Home = () => {
+const Home = ({route}) => {
+    const [modal, setModal] = useState(false)
+    const [secondModal, setSecondModal] = useState(false)
+    const navigation = useNavigation();
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setModal(true);
+        },  1000); //  10000 milliseconds =  10 seconds
+
+        return () => clearTimeout(timer); // Clear the timeout if the component is unmounted
+    }, []);
+
+    const { modall } = route.params || {};
+
+    useEffect(() => {
+      if (modall === 'LoggedInModal') {
+        // Logic to open the Etoken modal
+        // This could be a call to a function that triggers the modal
+        // For example, if you have a function `openEtokenModal`:
+        setSecondModal(true)
+      }
+    }, [modall]);
+
     return (
         <View style={{
             flex: 1,
@@ -27,6 +52,9 @@ const Home = () => {
                 marginTop: 50
             }]}>Recent Transactions</Text>
             <View style={styles.line}></View>
+
+            {modal && <SetUpPassword modal={modal} setModal={setModal}/>}
+            {secondModal && <LoggedInModal modal={secondModal} setModal={setSecondModal}/>}
         </View>
     )
 }

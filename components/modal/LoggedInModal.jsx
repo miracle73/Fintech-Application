@@ -1,10 +1,10 @@
 import { View, Text, Modal, StyleSheet, Dimensions, Image, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
-import ModalImage from '../../assets/images/setuppassword.png'
+import ModalImage from '../../assets/images/modal.png'
 
 const { width, height } = Dimensions.get('window')
-const SetUpPassword = ({modal, setModal}) => {
+const LoggedInModal = ({ setModal, modal }) => {
     const navigation = useNavigation();
 
     return (
@@ -18,15 +18,14 @@ const SetUpPassword = ({modal, setModal}) => {
         >
             <View style={styles.modalContainer}>
                 <Image source={ModalImage} />
-                <Text style={styles.firstText}>Set-up your password</Text>
-                <Text style={styles.secondText}>Secure your e-token by setting-up a password.</Text>
-                <TouchableOpacity style={[styles.button]} onPress={() => navigation.navigate('Password')}>
-                    <Text style={styles.thirdText}>Continue</Text>
-                </TouchableOpacity>
+                <Text style={styles.firstText}>Logged In</Text>
+                <Text style={styles.secondText}>Welcome back Roberts, Remember the Beels e-Token provides  a level of security to your transactions</Text>
+
             </View>
         </Modal>
     )
 }
+
 const styles = StyleSheet.create({
     modalContainer: {
         flex: 0.5,
@@ -57,23 +56,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 10
     },
-    button: {
-        paddingVertical: 15,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#082C25',
-        borderRadius: 14,
-        marginTop: 30,
-        width: '100%'
-    },
-    thirdText: {
-        fontWeight: '600',
-        fontSize: 19,
-        fontStyle: "normal",
-        color: '#B6F485'
-    },
+
 
 })
 
-export default SetUpPassword
+export default LoggedInModal

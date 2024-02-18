@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet,  TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet,  TouchableOpacity, Image } from 'react-native'
 import React, { useState } from 'react'
 import { MaterialIcons } from '@expo/vector-icons'
 import { TextInput } from 'react-native'
@@ -6,7 +6,8 @@ import { StatusBar } from 'expo-status-bar';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import EToken from '../components/modal/EToken';
 import { useNavigation } from '@react-navigation/native';
-
+import HidePassword from '../assets/images/hidePassword.png'
+import { postRequest } from '../utils/ApiService';
 
 const ReactivationScreen = () => {
     const [modal, setModal] = useState(false)
@@ -14,7 +15,13 @@ const ReactivationScreen = () => {
     const [activationCode, setActivationCode] = useState("");
     const [customerId, setCustomerId] = useState("");
     const [transactionPin, setTransactionPin] = useState("");
+    const [showPassword, setShowPassword] = useState(false)
+    const [secondShowPassword, setSecondShowPassword] = useState(false)
+    const [thirdShowPassword, setThirdShowPassword] = useState(false)
+    const [fourthShowPassword, setFourthShowPassword] = useState(false)
     const navigation = useNavigation();
+    const [isloading, setIsLoading] = useState(false)
+    const [notification, setNotification] = useState({ type: '', message: '', visible: false, });
     const allFieldsFilled = serialNumber !== "" && activationCode !== "" && customerId !== "" && transactionPin !== "";
 
     const handleSubmit = () => {
@@ -25,6 +32,31 @@ const ReactivationScreen = () => {
         setTransactionPin('')
         setModal(true)
     }
+
+    const handleReactivation = async (serialNumber, activationCode, customerId, transactionPin) => {
+        setIsLoading(true);
+        // try {
+        //     const response = await postRequest('user/token/activate', { activation_code: activationCode, customer_id: customerId, pin: transactionPin, serial_num: serialNumber });
+        //     if (response.error) {
+        //         setIsLoading(false);
+        //         setNotification({ type: 'error', message: response.errorMessage, visible: true, });
+        //         return;
+        //     } else {
+        //         console.log(response.data);
+        //         setIsLoading(false);
+        //     }
+        // } catch (error) {
+        //     setIsLoading(false);
+        //     setNotification({ type: 'error', message: error.message, visible: true, });
+        //     console.log(error);
+        // }
+        setActivationCode("")
+        setCustomerId('')
+        setSerialNumber('')
+        setTransactionPin('')
+        setModal(true)
+    }
+
   return (
     <View style={{
         flex: 1,
@@ -52,7 +84,11 @@ const ReactivationScreen = () => {
                     onChangeText={setSerialNumber}
                     placeholderTextColor="#7B7B7B"
                     keyboardType='numeric'
+                    secureTextEntry={!showPassword}
                 />
+                <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={{ padding: 10 }}>
+                        <Image source={HidePassword} />
+                    </TouchableOpacity>
             </View>
             <View style={[styles.container, { marginTop: 15 }]}>
                 <TextInput
@@ -62,8 +98,11 @@ const ReactivationScreen = () => {
                     onChangeText={setActivationCode}
                     placeholderTextColor="#7B7B7B"
                     keyboardType='numeric'
-
+                    secureTextEntry={!secondShowPassword}
                 />
+                  <TouchableOpacity onPress={() => setSecondShowPassword(!secondShowPassword)} style={{ padding: 10 }}>
+                        <Image source={HidePassword} />
+                    </TouchableOpacity>
             </View>
             <View style={[styles.container, { marginTop: 15 }]}>
                 <TextInput
@@ -72,8 +111,12 @@ const ReactivationScreen = () => {
                     value={customerId}
                     onChangeText={setCustomerId}
                     placeholderTextColor="#7B7B7B"
+                    secureTextEntry={!thirdShowPassword}
 
                 />
+                 <TouchableOpacity onPress={() => setThirdShowPassword(!thirdShowPassword)} style={{ padding: 10 }}>
+                        <Image source={HidePassword} />
+                    </TouchableOpacity>
             </View>
             <View style={[styles.container, { marginTop: 15 }]}>
                 <TextInput
@@ -83,10 +126,13 @@ const ReactivationScreen = () => {
                     onChangeText={setTransactionPin}
                     placeholderTextColor="#7B7B7B"
                     keyboardType='numeric'
-
+                    secureTextEntry={!fourthShowPassword}
                 />
+                  <TouchableOpacity onPress={() => setFourthShowPassword(!fourthShowPassword)} style={{ padding: 10 }}>
+                        <Image source={HidePassword} />
+                    </TouchableOpacity>
             </View>
-            <TouchableOpacity style={[styles.button, allFieldsFilled && { backgroundColor: '#082C25' }]} onPress={handleSubmit}>
+            <TouchableOpacity style={[styles.button, allFieldsFilled && { backgroundColor: '#082C25' }]} onPress={() => handleReactivation(serialNumber, activationCode, customerId, transactionPin)}>
                 <Text style={styles.fifthText}>Continue</Text>
             </TouchableOpacity>
         </KeyboardAwareScrollView>

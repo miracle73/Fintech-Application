@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
-const BASE_URL = 'https://mom.com.ng/digits/api/api/v1';
+const BASE_URL = 'https://beelsfinance.com/api/api/v1/';
 
 const defaultHeaders = {
   Accept: 'application/json',

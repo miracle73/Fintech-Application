@@ -1,54 +1,53 @@
-import { View, Text, ActivityIndicator, StyleSheet, Animated } from 'react-native'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import Spinner from '../assets/images/spinner.gif'
 
-const Loading = () => {
-    // Create a reference to the Animated value
-    const translateX = useRef(new Animated.Value(0)).current;
+const Loading = ({ route, navigation }) => {
+    const { next, info } = route.params;
 
-    // Function to start the animation
-    const startAnimation = () => {
-        // Reset the animation value to the starting position
-        translateX.setValue(-100);
+    // useEffect(() => {
+    //     const timer = setTimeout(() => {
+    //         // Navigate to the next screen
+    //         navigation.navigate(next);
 
-        // Define the animation sequence
-        Animated.sequence([
-            Animated.timing(translateX, {
-                toValue: 100, // End position
-                duration: 2000, // Duration of the animation
-                useNativeDriver: true, // Use native driver for better performance
-            }),
-            Animated.timing(translateX, {
-                toValue: -100, // Return to the starting position
-                duration: 2000, // Duration of the animation
-                useNativeDriver: true, // Use native driver for better performance
-            }),
-        ]).start(event => {
-            if (event.finished) {
-                // Repeat the animation if it finished
-                startAnimation();
-            }
-        });
-    };
+    //         // Open the modal after a brief delay to ensure the screen has time to mount
+    //         setTimeout(() => {
+    //             if (next === 'Activation') {
+    //                 navigation.setParams({ modall: 'Etoken' });
+    //             } else if (next === 'Home') {
+    //                 navigation.setParams({ modall: 'LoggedInModal' });
+    //             }
+    //         }, 500); // Adjust delay as needed
+    //     }, 10000);
 
-    // Start the animation when the component mounts
+    //     // Clear the timeout if the component is unmounted
+    //     return () => clearTimeout(timer);
+    // }, [navigation, next]);
+
     useEffect(() => {
-        startAnimation();
-    }, []);
+        const timer = setTimeout(() => {
+            if (next === 'Activation') {
+                navigation.navigate(next, { modall: 'Etoken' });
+            } else if (next === 'Home') {
+                navigation.navigate(next, { modall: 'LoggedInModal' });
+            }
+            else
+                navigation.navigate(next);
+
+
+        }, 10000);
+
+        // Clear the timeout if the component is unmounted
+        return () => clearTimeout(timer);
+    }, [navigation, next]);
 
     return (
         <View style={styles.container}>
-            <Animated.View
-                style={[
-                    styles.loader,
-                    {
-                        transform: [{ translateX }], // Apply the animated value to the X axis
-                    },
-                ]}
-            />
-            <Text style={styles.text}>Setting up password...</Text>
+            <Image source={Spinner} style={{ height: 100, width: 100 }} />
+            <Text style={styles.text}>{info}</Text>
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -57,17 +56,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#FFFFFF',
     },
-    loader: {
-        width: 15, // Width of the loader
-        height: 15, // Height of the loader
-        borderRadius: 8, // Make it round
-        backgroundColor: '#082C25', // Color of the loader
-        position: 'absolute', // Position it absolutely to move freely
-    },
     text: {
-        marginTop: 80,
+        marginTop: 20,
         fontSize: 18,
     },
 });
 
-export default Loading
+export default Loading;

@@ -8,6 +8,7 @@ import PasswordImage from '../assets/images/pass.png'
 import Fingerprint from '../assets/images/fingerprint.png'
 import FaceID from '../assets/images/FaceId.png'
 import HidePassword from '../assets/images/hidePassword.png'
+import { postRequest } from '../utils/ApiService';
 import { useNavigation } from '@react-navigation/native';
 
 const Password = () => {
@@ -17,6 +18,10 @@ const Password = () => {
     const [secondIsEnabled, secondSetIsEnabled] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [secondShowPassword, setSecondShowPassword] = useState(false);
+    const [isloading, setIsLoading] = useState(false)
+    const [notification, setNotification] = useState({ type: '', message: '', visible: false, });
+
+
 
     // Function to toggle the password visibility state
     const toggleShowPassword = () => {
@@ -31,12 +36,85 @@ const Password = () => {
     const secondToggleSwitch = () => {
         secondSetIsEnabled(previousState => !previousState);
     };
+    const handleSubmit = async (password, confirmPassword) => {
+        const url = 'https://beelsfinance.com/api/api/v1/user/token/password/change';
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer 3321|ty0fWbuthmq92uj6bzNBNiVmAiSopekCby6AGj95'
+        };
+        const data = {
+            password: "Fantastic",
+            cpassword: "Fantastic",
+            trx_id: '8IPv6kDQ',
+            pin: '1234'
+        };
 
-    const handleSubmit = () => {
-        console.log(`Password: ${password}, Confirm Password: ${confirmPassword}`);
-        setPassword('')
-        setConfirmPassword("")
-    }
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                // Handle server errors
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'An error occurred while changing the password.');
+            }
+
+            // Handle successful response
+            const responseData = await response.json();
+            console.log(responseData);
+            // You can set state or navigate based on the response here
+            // For example, if you have a success message:
+            // setNotification({ type: 'success', message: 'Password changed successfully!', visible: true });
+
+        } catch (error) {
+            // Handle client and server errors
+            setNotification({ type: 'error', message: error.message, visible: true });
+            console.error(error);
+        } finally {
+            // Reset the form fields after the request
+            navigation.navigate('Loading', {
+                next: "EnterPassword",
+                info: "Logging in..."
+            })
+            setPassword('');
+            setConfirmPassword('');
+        }
+    };
+
+    
+
+    // const handleSubmit = async (password, confirmPassword) => {
+    //     setIsLoading(true);
+    //     try {            
+    //         const response = await postRequest('/token/login', { cpassword: confirmPassword, password: password, trx_id: password, pin: pin });
+    //         if (response.error) {
+    //             setIsLoading(false);
+    //             setNotification({type: 'error', message: response.errorMessage, visible: true,});
+    //             return;
+    //         } else {
+    //           console.log(response.data);
+    //             setIsLoading(false);
+    //         }            
+    //     } catch (error) {
+    //         setIsLoading(false);
+    //         setNotification({type: 'error', message: error.message, visible: true,});
+    //         console.log(error);            
+    //     }
+    //     navigation.navigate('Loading', {
+    //         next: "EnterPassword",
+    //         info: "Logging in..."
+    //     })
+    //     setPassword('')
+    //     setConfirmPassword("")
+    //   }
+    // const handleSubmit = () => {
+    //     console.log(`Password: ${password}, Confirm Password: ${confirmPassword}`);
+    //     setPassword('')
+    //     setConfirmPassword("")
+    // }
     return (
         <View style={{
             flex: 1,
@@ -65,7 +143,7 @@ const Password = () => {
                         keyboardType='numeric'
                         secureTextEntry={!showPassword}
                     />
-                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={{padding: 10}}>
+                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={{ padding: 10 }}>
                         <Image source={HidePassword} />
                     </TouchableOpacity>
 
@@ -81,7 +159,7 @@ const Password = () => {
                         keyboardType='numeric'
                         secureTextEntry={!secondShowPassword}
                     />
-                    <TouchableOpacity onPress={() => setSecondShowPassword(!secondShowPassword)} style={{padding: 10}}>
+                    <TouchableOpacity onPress={() => handleSubmit(confirmPassword, password)} style={{ padding: 10 }}>
                         <Image source={HidePassword} />
                     </TouchableOpacity>
 
@@ -138,7 +216,7 @@ const Password = () => {
                         value={isEnabled}
                     />
                 </View>
-                <TouchableOpacity style={[styles.button, allFieldsFilled && { backgroundColor: '#082C25' }]} onPress={handleSubmit}>
+                <TouchableOpacity style={[styles.button, allFieldsFilled && { backgroundColor: '#082C25' }]} onPress={() => handleSubmit(password, confirmPassword)}>
                     <Text style={styles.sixthText}>Set-up password</Text>
                 </TouchableOpacity>
             </KeyboardAwareScrollView>

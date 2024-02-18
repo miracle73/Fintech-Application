@@ -6,7 +6,7 @@ import ModalImage from '../../assets/images/modal.png'
 const { width, height } = Dimensions.get('window')
 const EToken = ({ setModal, modal }) => {
   const navigation = useNavigation();
-  const [activeComponent, setActiveComponent] = useState(null);
+  
   return (
     <Modal
       animationType="slide"

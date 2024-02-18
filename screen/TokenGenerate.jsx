@@ -7,16 +7,54 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 
 const TokenGenerate = () => {
+    const [isTimerComplete, setIsTimerComplete] = useState(false); // New state variable
     const navigation = useNavigation();
-
     const [isPlaying, setIsPlaying] = useState(true);
     const [duration, setDuration] = useState(10); // Set your desired duration
-   
+    const [isloading, setIsLoading] = useState(false)
+    const [notification, setNotification] = useState({ type: '', message: '', visible: false, });
 
-    const handleSubmit = () => {
-        console.log("dream")
-        setIsPlaying(false);
-    }
+    // const handleSubmit = () => {
+    //     console.log("dream")
+    //     setIsPlaying(false);
+    // }
+
+    const getToken = async () => {
+        const url = 'https://beelsfinance.com/api/api/v1/user/token/regenerate';
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer  3328|nUuYtccYkUJBtq0MvFVH2UcnEqtEinXIzU8sSzZK'
+        };
+    
+        try {
+            setIsLoading(true); // Start loading indicator
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: headers
+            });
+    
+            if (!response.ok) {
+                // Handle server errors
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'An error occurred while regenerating the token.');
+            }
+    
+            // Handle successful response
+            const responseData = await response.json();
+            console.log(responseData);
+            // You can set state or navigate based on the response here
+            // For example, if you have a success message:
+            // setNotification({ type: 'success', message: 'Token regenerated successfully!', visible: true });
+    
+        } catch (error) {
+            // Handle client and server errors
+            setNotification({ type: 'error', message: error.message, visible: true });
+            console.error(error);
+        } finally {
+            setIsLoading(false); // Stop loading indicator
+        }
+    };
+
     return (
         <View style={{
             flex: 1,
@@ -40,14 +78,23 @@ const TokenGenerate = () => {
                 </View>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 70 }}>
-             
+
                 <CountdownCircleTimer
                     isPlaying={isPlaying}
                     duration={duration}
                     colors={['#A4DC78', '#F7B801', '#FF7650', '#A30000']}
                     colorsTime={[duration * 0.75, duration * 0.5, duration * 0.25, 0]}
-                    onComplete={() => setIsPlaying(false)}
+                    onComplete={() => {
+                        setIsPlaying(false);
+                        setIsTimerComplete(true);
+                    }}
+                // onTimeElapsed={(elapsedTime) => {
+                //     if (elapsedTime >= duration *  0.3) {
+                //         setIsTimerComplete(true);
+                //     }
+                // }}
                 >
+
                     {({ remainingTime }) => (
                         <Text style={styles.timerText}>{Math.ceil(remainingTime)}</Text>
                     )}
@@ -56,7 +103,7 @@ const TokenGenerate = () => {
 
 
 
-            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+            <TouchableOpacity style={[styles.button, isTimerComplete && { backgroundColor: '#082C25' }]} onPress={getToken}>
                 <Text style={styles.fifthText}>Regenerate Token</Text>
             </TouchableOpacity>
             <View style={[styles.coverContainer, { marginTop: 30 }]}>
