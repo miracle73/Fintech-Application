@@ -3,11 +3,13 @@ import BackgroundImage from '../assets/images/welcome-screen.png'
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import MethodModal from '../components/modal/MethodModal';
+import FAQModal from '../components/modal/FAQModal';
 
 
 const WelcomeScreen = () => {
     const [isChecked, setIsChecked] = useState(false);
     const [modal, setModal] = useState(false)
+    const [secondModal, setSecondModal] = useState(false)
     const handleCheckBoxToggle = () => {
         setIsChecked(!isChecked);
     };
@@ -66,10 +68,14 @@ const WelcomeScreen = () => {
                 <TouchableOpacity style={styles.button} onPress={() => setModal(true)}>
                     <Text style={styles.sixthText}>Continue</Text>
                 </TouchableOpacity>
-                <Text style={styles.seventhText}>Contact customer support.</Text>
+                <TouchableOpacity onPress={() => setSecondModal(true)}>
+                    <Text style={styles.seventhText}>Contact customer support.</Text>
+                </TouchableOpacity>
+
                 <Text style={[styles.seventhText, { marginTop: 10 }]}>Help</Text>
             </View>
-            {modal && <MethodModal modal={modal} setModal={setModal} setIsChecked={setIsChecked}/>}
+            {modal && <MethodModal modal={modal} setModal={setModal} setIsChecked={setIsChecked} />}
+            {secondModal && <FAQModal modal={secondModal} setModal={setSecondModal} />}
         </ImageBackground>
     )
 }

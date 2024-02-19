@@ -1,5 +1,5 @@
-import { View, TextInput, Text, StyleSheet, TouchableOpacity, Image, ImageBackground } from 'react-native'
-import React, { useState } from 'react'
+import { View, TextInput, Text, StyleSheet, TouchableOpacity, Image, ImageBackground, ActivityIndicator, Modal } from 'react-native'
+import React, { useState, useEffect } from 'react'
 import { MaterialIcons } from '@expo/vector-icons'
 import { StatusBar } from 'expo-status-bar';
 import HidePassword from '../assets/images/hidePassword.png'
@@ -9,65 +9,120 @@ import Logo from '../assets/images/logo.png'
 import { useNavigation } from '@react-navigation/native'
 import { postRequest } from '../utils/ApiService';
 import PasswordBackground from '../assets/images/passwordBackground.png'
+import Notification from '../components/Notification';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import SuccessModal from '../components/modal/SuccessModal';
+import { useAuth } from '../utils/AuthContext';
 
-const EnterPassword = () => {
+const EnterPassword = ({ route }) => {
     const [email, setEmail] = useState("");
+    const [modal, setModal] = useState(false)
+    const { user, setUser } = useAuth();
+    const [emailError, setEmailError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    const [isloading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     const navigation = useNavigation();
     const [notification, setNotification] = useState({ type: '', message: '', visible: false, });
 
     const allFieldsFilled = password !== "" && email !== "";
-    // const handleSubmit = () => {
-    //     console.log(`Email: ${email}, Password: ${password}`);
-    //     setPassword('')
-    //     setEmail("")
-    // }
+   
+    const validateEmail = (email) => {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailRegex.test(email);
+    };
+
+   
+    const validatePassword = (password) => {
+        const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+        return passwordRegex.test(password);
+    };
+
+  
+    const isPasswordMatch = (password) => {
+       
+        return password === user.password;
+    };
+    const { modall } = route.params || {};
+
+    useEffect(() => {
+        if (modall === 'Success') {
+            setModal(true);
+           
+        }
+    }, [modall]);
+
 
     const handleSubmit = async (email, password) => {
         const url = 'https://beelsfinance.com/api/api/v1/token/login';
         const data = {
-            type: 'password',
-            customer: 'Nob6IK1P',
+            type: 'Password',
+            customer: user.customer_id,
             password: "Fantastic"
         };
+        setIsLoading(true);
+        setEmailError("");
+        setPasswordError("");
 
+       
+        if (!validateEmail(email)) {
+            setEmailError("Invalid email format.");
+            setEmail("")
+            setPassword("")
+            setIsLoading(false); 
+            return;
+        }
+
+     t
+        if (!validatePassword(password)) {
+            setPasswordError("Password must be at least  8 characters long, include a number, and a special character.");
+            setEmail("")
+            setPassword("")
+            setIsLoading(false); 
+            return;
+        }
+
+        if (!isPasswordMatch(password)) {
+            setPasswordError("Password does not match user's password.");
+            setEmail("")
+            setPassword("")
+            setIsLoading(false); 
+            return;
+        }
         try {
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer  3321|ty0fWbuthmq92uj6bzNBNiVmAiSopekCby6AGj95'
+                    'Authorization': 'Bearer 3443|IGX3xJjvqT7Bej62irZQwWf2Mq3ZSmx2cuZYsyGS'
                 },
                 body: JSON.stringify(data)
             });
 
             if (!response.ok) {
-                // Handle server errors
-                const errorData = await response.text(); // Use text() instead of json() for error handling
-                // const errorData = await response.json();
+             
+                const errorData = await response.text(); 
+    
                 throw new Error(errorData.message || 'An error occurred while activating the token.');
             }
 
-            // Handle successful response
+      
             const responseData = await response.json();
             console.log(responseData);
-            // You can set state or navigate based on the response here
-            // For example, if you have a success message:
-            // setNotification({ type: 'success', message: 'Token activated successfully!', visible: true });
-
-        } catch (error) {
-            // Handle client and server errors
-            setNotification({ type: 'error', message: error.message, visible: true });
-            console.error(error);
-        } finally {
-            setIsLoading(false);
             navigation.navigate('Loading', {
                 next: "Home",
                 info: "Setting up password"
             })
-            // Reset the form fields after the request
+        
+        } catch (error) {
+     
+            setNotification({ type: 'error', message: error.message, visible: true });
+      
+        } finally {
+            setIsLoading(false);
+
+      
             setPassword('');
             setEmail('');
         }
@@ -75,31 +130,7 @@ const EnterPassword = () => {
 
 
 
-    // const handleLogin = async (email, password) => {
-    //     setIsLoading(true);
-    // try {            
-    //     const response = await postRequest('/token/login', { type: 'password', customer: email, password: password });
-    //     if (response.error) {
-    //         setIsLoading(false);
-    //         setNotification({type: 'error', message: response.errorMessage, visible: true,});
-    //         return;
-    //     } else {
-    //       console.log(response.data);
-    //         setIsLoading(false);
-    //     }            
-    // } catch (error) {
-    //     setIsLoading(false);
-    //     setNotification({type: 'error', message: error.message, visible: true,});
-    //     console.log(error);            
-    // }
-    //     navigation.navigate('Loading', {
-    //         next: "Home",
-    //         info: "Setting up password"
-    //     })
-    //     setPassword('')
-    //     setEmail("")
-    //   }
-
+ 
     return (
         <ImageBackground style={{
             flex: 1,
@@ -107,50 +138,71 @@ const EnterPassword = () => {
             paddingHorizontal: 20,
             paddingTop: 130
         }} source={PasswordBackground}>
-            <StatusBar style="auto" barStyle="dark-content" hidden={false} />
-            <Image source={Logo} style={{ width: 100, height: 150 }} />
-            <Text style={styles.firstText}>Welcome Roberts</Text>
-            <Text style={styles.secondText}>Log In</Text>
-            <View style={[styles.container]} >
-                <Image source={EmailImage} />
-                <TextInput
-                    style={styles.fourthText}
-                    placeholder="Email"
-                    value={email}
-                    onChangeText={setEmail}
-                    placeholderTextColor="#B2BEBB"
+            <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
+                <StatusBar style="auto" barStyle="dark-content" hidden={false} />
+                <Image source={Logo} style={{ width: 100, height: 150 }} />
+                <Text style={styles.firstText}>Welcome Roberts</Text>
+                <Text style={styles.secondText}>Log In</Text>
+                <View style={[styles.container]} >
+                    <Image source={EmailImage} />
+                    <TextInput
+                        style={styles.fourthText}
+                        placeholder="Email"
+                        value={email}
+                        onChangeText={setEmail}
+                        placeholderTextColor="#B2BEBB"
 
 
-                />
+                    />
+                </View>
+                {emailError && <Text style={styles.errorText}>{emailError}</Text>}
+                <View style={[styles.container]} >
+                    <Image source={PasswordImage} />
+                    <TextInput
+                        style={styles.fourthText}
+                        placeholder="Confirm password"
+                        value={password}
+                        onChangeText={setPassword}
+                        placeholderTextColor="#B2BEBB"
+                        secureTextEntry={!showPassword}
+                    />
+
+                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={{ padding: 10 }}>
+                        <Image source={HidePassword} />
+                    </TouchableOpacity>
+
+                </View>
+                {passwordError && <Text style={styles.errorText}>{passwordError}</Text>}
+                {isLoading ? (
+                    <View style={{ marginTop: 50 }}>
+                        <View style={{ marginBottom: 10 }}>
+                            <ActivityIndicator size="large" color="#3ab54a" />
+                            <Text style={{ textAlign: 'center' }}>Loading...</Text>
+                        </View>
+                    </View>
+                ) : (
+                    <TouchableOpacity style={[styles.button, allFieldsFilled && { backgroundColor: '#082C25' }]} onPress={() => handleSubmit(email, password)}>
+                        <Text style={[styles.sixthText, allFieldsFilled && { color: '#B6F485' }]}>Login</Text>
+                    </TouchableOpacity>
+                )}
+
+                <Text style={styles.thirdText}>Use biometrics</Text>
+                <Text style={styles.thirdText}>Forgot password?</Text>
 
 
-            </View>
-            <View style={[styles.container]} >
-                <Image source={PasswordImage} />
-                <TextInput
-                    style={styles.fourthText}
-                    placeholder="Confirm password"
-                    value={password}
-                    onChangeText={setPassword}
-                    placeholderTextColor="#B2BEBB"
-                    keyboardType='numeric'
-                    secureTextEntry={!showPassword}
-                />
-                <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={{ padding: 10 }}>
-                    <Image source={HidePassword} />
-                </TouchableOpacity>
+                <Notification type={notification.type} message={notification.message} visible={notification.visible} onClose={() => setNotification({ ...notification, visible: false })} />
 
-            </View>
-            <TouchableOpacity style={[styles.button, allFieldsFilled && { backgroundColor: '#082C25' }]} onPress={() => handleSubmit( email, password )}>
-                <Text style={[styles.sixthText, allFieldsFilled && { color: '#B6F485' }]}>Login</Text>
-            </TouchableOpacity>
-            <Text style={styles.thirdText}>Use biometrics</Text>
-            <Text style={styles.thirdText}>Forgot password?</Text>
+            </KeyboardAwareScrollView>
+            {modal && <SuccessModal modal={modal} setModal={setModal} />}
         </ImageBackground>
     )
 }
 
 const styles = StyleSheet.create({
+    errorText: {
+        color: 'red',
+        fontSize: 12,
+    },
     secondContainer: {
         justifyContent: 'space-between',
         flexDirection: 'row',

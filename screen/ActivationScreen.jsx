@@ -1,10 +1,12 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native'
 import React, { useState, useEffect } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialIcons } from '@expo/vector-icons'
 import { TextInput } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import EToken from '../components/modal/EToken';
+import Notification from '../components/Notification';
 import HidePassword from '../assets/images/hidePassword.png'
 import { useNavigation } from '@react-navigation/native';
 import SuccessModal from '../components/modal/SuccessModal';
@@ -25,18 +27,11 @@ const ActivationScreen = ({ route }) => {
     const [secondShowPassword, setSecondShowPassword] = useState(false)
     const [thirdShowPassword, setThirdShowPassword] = useState(false)
     const [fourthShowPassword, setFourthShowPassword] = useState(false)
-    const [isloading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     const [notification, setNotification] = useState({ type: '', message: '', visible: false, });
     const allFieldsFilled = serialNumber !== "" && activationCode !== "" && customerId !== "" && transactionPin !== "";
 
-    // const handleSubmit = () => {
-    //     console.log(`Serial Number: ${serialNumber}, Activation Code: ${activationCode}, Customer ID: ${customerId}, Transaction Pin: ${transactionPin}`);
-    //     setActivationCode("")
-    //     setCustomerId('')
-    //     setSerialNumber('')
-    //     setTransactionPin('')
 
-    // }
     const handleSubmit = async (serialNumber, activationCode, customerId, transactionPin) => {
         const url = 'https://beelsfinance.com/api/api/v1/token/activate';
         const data = {
@@ -45,7 +40,7 @@ const ActivationScreen = ({ route }) => {
             customer_id: 'Nob6IK1P',
             pin: '1234'
         };
-
+        setIsLoading(true);
         try {
             const response = await fetch(url, {
                 method: 'POST',
@@ -63,21 +58,26 @@ const ActivationScreen = ({ route }) => {
 
             // Handle successful response
             const responseData = await response.json();
-            console.log(responseData);
-            // You can set state or navigate based on the response here
-            // For example, if you have a success message:
-            // setNotification({ type: 'success', message: 'Token activated successfully!', visible: true });
 
-        } catch (error) {
-            // Handle client and server errors
-            setNotification({ type: 'error', message: error.message, visible: true });
-            console.error(error);
-        } finally {
+            // const { data } = responseData
+            console.log(responseData);
+            const userDetails = responseData.data;
+  
+            await AsyncStorage.setItem('userDetails', JSON.stringify(userDetails));
+
             navigation.navigate('Loading', {
                 next: "Activation",
                 info: "Activating your Beels e-Token"
             })
-            // Reset the form fields after the request
+        
+
+        } catch (error) {
+       
+            setNotification({ type: 'error', message: error.message, visible: true });
+            console.error(error);
+        } finally {
+            setIsLoading(false);
+
             setSerialNumber('');
             setActivationCode('');
             setCustomerId('');
@@ -86,44 +86,11 @@ const ActivationScreen = ({ route }) => {
     };
 
 
-
-    // const handleActivation = async (serialNumber, activationCode, customerId, transactionPin) => {
-    //     setIsLoading(true);
-    //     try {
-    //         const response = await postRequest('user/token/activate', { activation_code: '725449', customer_id: 'Nob6IK1P', pin: '1234', serial_num: 'P0DQ6JFUVYBTFJEQ' });
-    //         if (response.error) {
-    //             setIsLoading(false);
-    //             setNotification({ type: 'error', message: response.errorMessage, visible: true, });
-    //             return;
-    //         } else {
-    //             console.log(response.data);
-    //             setIsLoading(false);
-    //         }
-    //     } catch (error) {
-    //         setIsLoading(false);
-    //         setNotification({ type: 'error', message: error.message, visible: true, });
-    //         console.log(error);
-    //         return;
-
-    //     }
-    //     navigation.navigate('Loading', {
-    //         next: "Activation",
-    //         info: "Activating your Beels e-Token"
-    //     })
-    //     setActivationCode("")
-    //     setCustomerId('')
-    //     setSerialNumber('')
-    //     setTransactionPin('')
-    //     // setModal(true)
-    // }
-
     const { modall } = route.params || {};
 
     useEffect(() => {
         if (modall === 'Etoken') {
-            // Logic to open the Etoken modal
-            // This could be a call to a function that triggers the modal
-            // For example, if you have a function `openEtokenModal`:
+      
             setModal(true)
         }
     }, [modall]);
@@ -205,11 +172,23 @@ const ActivationScreen = ({ route }) => {
                         <Image source={HidePassword} />
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={[styles.button, allFieldsFilled && { backgroundColor: '#082C25' }]} onPress={() => handleSubmit(serialNumber, activationCode, customerId, transactionPin)}>
-                    <Text style={styles.fifthText}>Continue</Text>
-                </TouchableOpacity>
+                {isLoading ? (
+                    <View style={{ marginTop: 250 }}>
+                        <View style={{ marginBottom: 10 }}>
+                            <ActivityIndicator size="large" color="#3ab54a" />
+                            <Text style={{ textAlign: 'center' }}>Loading...</Text>
+                        </View>
+                    </View>
+                ) : (
+                    <TouchableOpacity style={[styles.button, allFieldsFilled && { backgroundColor: '#082C25' }]} onPress={() => handleSubmit(serialNumber, activationCode, customerId, transactionPin)}>
+                        <Text style={styles.fifthText}>Continue</Text>
+                    </TouchableOpacity>
+                )}
+
             </KeyboardAwareScrollView>
             {modal && <EToken modal={modal} setModal={setModal} />}
+
+            <Notification type={notification.type} message={notification.message} visible={notification.visible} onClose={() => setNotification({ ...notification, visible: false })} />
         </View>
     )
 }

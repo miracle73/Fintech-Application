@@ -5,25 +5,7 @@ import Spinner from '../assets/images/spinner.gif'
 const Loading = ({ route, navigation }) => {
     const { next, info } = route.params;
 
-    // useEffect(() => {
-    //     const timer = setTimeout(() => {
-    //         // Navigate to the next screen
-    //         navigation.navigate(next);
-
-    //         // Open the modal after a brief delay to ensure the screen has time to mount
-    //         setTimeout(() => {
-    //             if (next === 'Activation') {
-    //                 navigation.setParams({ modall: 'Etoken' });
-    //             } else if (next === 'Home') {
-    //                 navigation.setParams({ modall: 'LoggedInModal' });
-    //             }
-    //         }, 500); // Adjust delay as needed
-    //     }, 10000);
-
-    //     // Clear the timeout if the component is unmounted
-    //     return () => clearTimeout(timer);
-    // }, [navigation, next]);
-
+   
     useEffect(() => {
         const timer = setTimeout(() => {
             if (next === 'Activation') {
@@ -32,12 +14,12 @@ const Loading = ({ route, navigation }) => {
                 navigation.navigate(next, { modall: 'LoggedInModal' });
             }
             else
-                navigation.navigate(next);
+                navigation.navigate(next, {modall: "Success"});
 
 
         }, 10000);
 
-        // Clear the timeout if the component is unmounted
+       
         return () => clearTimeout(timer);
     }, [navigation, next]);
 

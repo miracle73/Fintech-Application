@@ -20,7 +20,7 @@ const SetUpPassword = ({modal, setModal}) => {
                 <Image source={ModalImage} />
                 <Text style={styles.firstText}>Set-up your password</Text>
                 <Text style={styles.secondText}>Secure your e-token by setting-up a password.</Text>
-                <TouchableOpacity style={[styles.button]} onPress={() => navigation.navigate('Password')}>
+                <TouchableOpacity style={[styles.button]} onPress={() => {navigation.navigate('Password'); setModal(false)}}>
                     <Text style={styles.thirdText}>Continue</Text>
                 </TouchableOpacity>
             </View>

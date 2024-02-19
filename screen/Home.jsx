@@ -5,29 +5,47 @@ import Copy from '../assets/images/copy.png'
 import SetUpPassword from '../components/modal/SetUpPassword'
 import LoggedInModal from '../components/modal/LoggedInModal'
 import { useNavigation } from '@react-navigation/native'
+import { useAuth } from '../utils/AuthContext'
 
 const Home = ({route}) => {
     const [modal, setModal] = useState(false)
     const [secondModal, setSecondModal] = useState(false)
+    const { user, setUser } = useAuth();
     const navigation = useNavigation();
+
+      
+    const [modalTimer, setModalTimer] = useState(null);
+
     useEffect(() => {
         const timer = setTimeout(() => {
             setModal(true);
-        },  1000); //  10000 milliseconds =  10 seconds
+        },  1000); 
 
-        return () => clearTimeout(timer); // Clear the timeout if the component is unmounted
+        return () => clearTimeout(timer); 
     }, []);
 
     const { modall } = route.params || {};
 
     useEffect(() => {
-      if (modall === 'LoggedInModal') {
-        // Logic to open the Etoken modal
-        // This could be a call to a function that triggers the modal
-        // For example, if you have a function `openEtokenModal`:
-        setSecondModal(true)
-      }
+        if (modall === 'LoggedInModal') {
+            setSecondModal(true);
+         
+            const timer = setTimeout(() => {
+                setSecondModal(false);
+            },  5000); 
+            setModalTimer(timer);
+        }
     }, [modall]);
+
+
+    useEffect(() => {
+        return () => {
+            if (modalTimer) {
+                clearTimeout(modalTimer);
+            }
+        };
+    }, [modalTimer]);
+
 
     return (
         <View style={{
@@ -40,7 +58,7 @@ const Home = ({route}) => {
             <Text style={styles.thirdText}>Home</Text>
             <Text style={styles.secondText}>Serial number</Text>
             <View style={[styles.container]} >
-                <Text style={[styles.firstText]}>1234-5678-90</Text>
+                <Text style={[styles.firstText]}>{user.serial}</Text>
                 <View style={styles.secondContainer}>
                     <Image source={Copy} />
                     <Text style={styles.fifthText}>Copy to clipboard</Text>

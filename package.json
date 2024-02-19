@@ -23,6 +23,7 @@
     "react-native-check-box": "^2.1.7",
     "react-native-countdown-circle-timer": "^3.2.1",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
+    "react-native-safe-area-context": "^4.9.0",
     "twrnc": "^3.6.8"
   },
   "devDependencies": {

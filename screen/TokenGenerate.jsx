@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, Animated, Easing } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image, Animated, Easing, ActivityIndicator } from 'react-native'
 import React, { useState, useEffect, useRef } from 'react'
 import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from '@react-navigation/native';
@@ -7,51 +7,45 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 
 const TokenGenerate = () => {
-    const [isTimerComplete, setIsTimerComplete] = useState(false); // New state variable
+    const [isTimerComplete, setIsTimerComplete] = useState(false); 
     const navigation = useNavigation();
     const [isPlaying, setIsPlaying] = useState(true);
-    const [duration, setDuration] = useState(10); // Set your desired duration
+    const [duration, setDuration] = useState(10); 
     const [isloading, setIsLoading] = useState(false)
     const [notification, setNotification] = useState({ type: '', message: '', visible: false, });
 
-    // const handleSubmit = () => {
-    //     console.log("dream")
-    //     setIsPlaying(false);
-    // }
+   
 
     const getToken = async () => {
         const url = 'https://beelsfinance.com/api/api/v1/user/token/regenerate';
         const headers = {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer  3328|nUuYtccYkUJBtq0MvFVH2UcnEqtEinXIzU8sSzZK'
+            'Authorization': 'Bearer  3443|IGX3xJjvqT7Bej62irZQwWf2Mq3ZSmx2cuZYsyGS'
         };
     
         try {
-            setIsLoading(true); // Start loading indicator
+            setIsLoading(true); 
             const response = await fetch(url, {
                 method: 'GET',
                 headers: headers
             });
     
             if (!response.ok) {
-                // Handle server errors
+        
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'An error occurred while regenerating the token.');
             }
     
-            // Handle successful response
+        
             const responseData = await response.json();
             console.log(responseData);
-            // You can set state or navigate based on the response here
-            // For example, if you have a success message:
-            // setNotification({ type: 'success', message: 'Token regenerated successfully!', visible: true });
-    
+       
         } catch (error) {
-            // Handle client and server errors
+        
             setNotification({ type: 'error', message: error.message, visible: true });
             console.error(error);
         } finally {
-            setIsLoading(false); // Stop loading indicator
+            setIsLoading(false); 
         }
     };
 
@@ -88,11 +82,7 @@ const TokenGenerate = () => {
                         setIsPlaying(false);
                         setIsTimerComplete(true);
                     }}
-                // onTimeElapsed={(elapsedTime) => {
-                //     if (elapsedTime >= duration *  0.3) {
-                //         setIsTimerComplete(true);
-                //     }
-                // }}
+           
                 >
 
                     {({ remainingTime }) => (

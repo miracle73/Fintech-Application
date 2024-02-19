@@ -35,21 +35,7 @@ const ReactivationScreen = () => {
 
     const handleReactivation = async (serialNumber, activationCode, customerId, transactionPin) => {
         setIsLoading(true);
-        // try {
-        //     const response = await postRequest('user/token/activate', { activation_code: activationCode, customer_id: customerId, pin: transactionPin, serial_num: serialNumber });
-        //     if (response.error) {
-        //         setIsLoading(false);
-        //         setNotification({ type: 'error', message: response.errorMessage, visible: true, });
-        //         return;
-        //     } else {
-        //         console.log(response.data);
-        //         setIsLoading(false);
-        //     }
-        // } catch (error) {
-        //     setIsLoading(false);
-        //     setNotification({ type: 'error', message: error.message, visible: true, });
-        //     console.log(error);
-        // }
+     
         setActivationCode("")
         setCustomerId('')
         setSerialNumber('')

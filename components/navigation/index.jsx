@@ -7,7 +7,6 @@ import ReactivationScreen from '../../screen/ReactivationScreen';
 import Home from '../../screen/Home';
 import HelpAndSupport from '../../screen/HelpAndSupport';
 import Settings from '../../screen/Settings';
-import tw from 'twrnc';
 import Password from '../../screen/Password';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeImage from "../../assets/images/home.png"
@@ -24,6 +23,7 @@ import EnterToken from '../../screen/EnterToken';
 import TokenGenerate from '../../screen/TokenGenerate';
 import Loading from '../../screen/Loading';
 import EnterPassword from '../../screen/EnterPassword';
+import FAQModal from '../modal/FAQModal';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -31,7 +31,8 @@ const AppNavigation = () => {
     return (
 
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="TokenGenerate" screenOptions={{ headerShown: false }} >
+            <Stack.Navigator initialRouteName="Welcome" screenOptions={{ headerShown: false }} >
+                <Stack.Screen name="Modal" component={FAQModal} options={{ headerShown: false }} />
                 <Stack.Screen name="Welcome" component={WelcomeScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Loading" component={Loading} options={{ headerShown: false }} />
                 <Stack.Screen name="EnterPassword" component={EnterPassword} options={{ headerShown: false }} />
@@ -50,7 +51,7 @@ const AppNavigation = () => {
                     },
                     headerShadowVisible: false,
                 }} />
-                 <Stack.Screen name="EnterToken" component={EnterToken} options={{
+                <Stack.Screen name="EnterToken" component={EnterToken} options={{
                     headerShown: true,
                     title: 'Enter E-Token',
                     headerTitleAlign: 'center',

@@ -34,7 +34,7 @@ const EnterToken = () => {
             const chunkIndex = Math.floor(index / 3)
 
             if (!resultArray[chunkIndex]) {
-                resultArray[chunkIndex] = [] // start a new chunk
+                resultArray[chunkIndex] = [] 
             }
 
             resultArray[chunkIndex].push(item)
@@ -44,7 +44,6 @@ const EnterToken = () => {
 
         setChunkedNumbers(chunked)
 
-        // const shuffledNumbers = shuffleArray(numbers);
     }, []);
 
 
@@ -80,7 +79,7 @@ const EnterToken = () => {
 
                 setFirstInput(value);
                 setActiveInput('second')
-                // }
+             
             } else if (activeInput === 'second') {
                 setSecondInput(value);
                 setActiveInput('third')

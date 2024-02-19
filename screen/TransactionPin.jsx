@@ -33,7 +33,7 @@ const TransactionPin = () => {
         const chunkIndex = Math.floor(index / 3)
   
         if (!resultArray[chunkIndex]) {
-          resultArray[chunkIndex] = [] // start a new chunk
+          resultArray[chunkIndex] = [] 
         }
   
         resultArray[chunkIndex].push(item)
@@ -43,7 +43,7 @@ const TransactionPin = () => {
   
       setChunkedNumbers(chunked)
   
-      // const shuffledNumbers = shuffleArray(numbers);
+    
     }, []);
   
   
@@ -83,7 +83,6 @@ const TransactionPin = () => {
           setActiveInput(null)
         }
   
-        // check if all TextInputs are filled
         if (firstInput && secondInput && thirdInput && fourthInput) {
           setActiveInput(null);
         }
