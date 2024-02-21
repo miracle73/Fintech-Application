@@ -1,18 +1,39 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import BackgroundImage from '../assets/images/welcome-screen.png'
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import MethodModal from '../components/modal/MethodModal';
 import FAQModal from '../components/modal/FAQModal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 
 const WelcomeScreen = () => {
     const [isChecked, setIsChecked] = useState(false);
     const [modal, setModal] = useState(false)
     const [secondModal, setSecondModal] = useState(false)
+    const [signedUp, setSignedUp] = useState(false)
+
     const handleCheckBoxToggle = () => {
         setIsChecked(!isChecked);
     };
+
+    const navigation = useNavigation();
+
+    useEffect(() => {
+        const checkIfUserHasSignedUp = async () => {
+            const hasSignedUp = await AsyncStorage.getItem('HAS_SIGNED_UP');
+            if (hasSignedUp === 'true') {
+                setSignedUp(true)
+            }
+        };
+
+        checkIfUserHasSignedUp();
+    }, []);
+
+    // ... rest of the component
+
+
     return (
         <ImageBackground source={BackgroundImage} style={styles.container}>
             <View >
@@ -65,7 +86,7 @@ const WelcomeScreen = () => {
                         <Text style={styles.fifthText}>Terms and Conditions and Privacy Policy</Text>
                     </View>
                 </View>
-                <TouchableOpacity style={styles.button} onPress={() => setModal(true)}>
+                <TouchableOpacity style={styles.button} onPress={() => {signedUp ? navigation.navigate('EnterPassword') : setModal(true)}}>
                     <Text style={styles.sixthText}>Continue</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setSecondModal(true)}>

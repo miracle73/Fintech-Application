@@ -59,7 +59,7 @@ const EnterPassword = ({ route }) => {
         const data = {
             type: 'Password',
             customer: user.customer_id,
-            password: "Fantastic"
+            password: password
         };
         setIsLoading(true);
         setEmailError("");
@@ -74,7 +74,7 @@ const EnterPassword = ({ route }) => {
             return;
         }
 
-     t
+     
         if (!validatePassword(password)) {
             setPasswordError("Password must be at least  8 characters long, include a number, and a special character.");
             setEmail("")
@@ -95,7 +95,7 @@ const EnterPassword = ({ route }) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer 3443|IGX3xJjvqT7Bej62irZQwWf2Mq3ZSmx2cuZYsyGS'
+                    // 'Authorization': 'Bearer 3443|IGX3xJjvqT7Bej62irZQwWf2Mq3ZSmx2cuZYsyGS'
                 },
                 body: JSON.stringify(data)
             });
@@ -114,6 +114,11 @@ const EnterPassword = ({ route }) => {
                 next: "Home",
                 info: "Setting up password"
             })
+            setUser({
+                ...user,
+                Authtoken: responseData.data.token,
+                ...responseData.data.user
+            });
         
         } catch (error) {
      

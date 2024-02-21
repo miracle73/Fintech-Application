@@ -21,10 +21,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.digitstech.token"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "owner": "digitstech",
+    "extra": {
+      "eas": {
+        "projectId": "0745ddfa-4226-42c2-8d63-3d169200267f"
+      }
     }
   }
 }

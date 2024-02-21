@@ -12,6 +12,7 @@ import { postRequest } from '../utils/ApiService';
 import { useNavigation } from '@react-navigation/native';
 import Notification from '../components/Notification';
 import { useAuth } from '../utils/AuthContext';
+import { ScrollView } from 'react-native';
 
 const Password = () => {
     const [password, setPassword] = useState("");
@@ -55,11 +56,11 @@ const Password = () => {
         const url = 'https://beelsfinance.com/api/api/v1/user/token/password/change';
         const headers = {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer 3443|IGX3xJjvqT7Bej62irZQwWf2Mq3ZSmx2cuZYsyGS'
+            // 'Authorization': 'Bearer 3443|IGX3xJjvqT7Bej62irZQwWf2Mq3ZSmx2cuZYsyGS'
         };
         const data = {
-            password: "Fantastic",
-            cpassword: "Fantastic",
+            password: password,
+            cpassword: confirmPassword,
             trx_id: user.trx_id,
             pin: user.pin
         };
@@ -126,7 +127,7 @@ const Password = () => {
 
  
     return (
-        <View style={{
+        <ScrollView style={{
             flex: 1,
             backgroundColor: '#fff',
             paddingHorizontal: 20,
@@ -227,7 +228,7 @@ const Password = () => {
                     />
                 </View>
                 {isLoading ? (
-                    <View style={{ marginTop: 250 }}>
+                    <View style={{ marginTop: 10 }}>
                         <View style={{ marginBottom: 10 }}>
                             <ActivityIndicator size="large" color="#3ab54a" />
                             <Text style={{ textAlign: 'center' }}>Loading...</Text>
@@ -244,7 +245,7 @@ const Password = () => {
          
                 <Notification type={notification.type} message={notification.message} visible={notification.visible} onClose={() => setNotification({ ...notification, visible: false })} />
            
-        </View>
+        </ScrollView>
     )
 }
 

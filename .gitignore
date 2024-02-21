@@ -2,11 +2,14 @@
 
 # dependencies
 node_modules/
+eas.json
+App.js
 
 # Expo
 .expo/
 dist/
 web-build/
+
 
 # Native
 *.orig.*

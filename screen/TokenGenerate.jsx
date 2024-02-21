@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import Copy from '../assets/images/copy.png'
 import { MaterialIcons } from '@expo/vector-icons'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
+import { useAuth } from '../utils/AuthContext';
 
 const TokenGenerate = () => {
     const [isTimerComplete, setIsTimerComplete] = useState(false); 
@@ -13,7 +14,7 @@ const TokenGenerate = () => {
     const [duration, setDuration] = useState(10); 
     const [isloading, setIsLoading] = useState(false)
     const [notification, setNotification] = useState({ type: '', message: '', visible: false, });
-
+    const { user, setUser } = useAuth();
    
 
     const getToken = async () => {
@@ -39,6 +40,11 @@ const TokenGenerate = () => {
         
             const responseData = await response.json();
             console.log(responseData);
+            const userDetails = responseData.data;
+            setUser({
+                ...user,
+                ...userDetails
+            });
        
         } catch (error) {
         
@@ -67,8 +73,8 @@ const TokenGenerate = () => {
             <Text style={styles.firstText}>Token Generated</Text>
             <View style={styles.coverContainer}>
                 <View style={styles.container}>
-                    <Text style={styles.thirdText}>113</Text>
-                    <Text style={styles.thirdText}>599</Text>
+                    <Text style={styles.thirdText}>{user.token}</Text>
+                
                 </View>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 70 }}>

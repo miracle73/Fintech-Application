@@ -35,10 +35,10 @@ const ActivationScreen = ({ route }) => {
     const handleSubmit = async (serialNumber, activationCode, customerId, transactionPin) => {
         const url = 'https://beelsfinance.com/api/api/v1/token/activate';
         const data = {
-            serial_num: 'P0DQ6JFUVYBTFJEQ',
-            activation_code: '725449',
-            customer_id: 'Nob6IK1P',
-            pin: '1234'
+            serial_num: serialNumber,
+            activation_code: activationCode,
+            customer_id: customerId,
+            pin: transactionPin
         };
         setIsLoading(true);
         try {
@@ -64,6 +64,7 @@ const ActivationScreen = ({ route }) => {
             const userDetails = responseData.data;
   
             await AsyncStorage.setItem('userDetails', JSON.stringify(userDetails));
+            await AsyncStorage.setItem('HAS_SIGNED_UP', 'true'); 
 
             navigation.navigate('Loading', {
                 next: "Activation",
