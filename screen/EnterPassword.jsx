@@ -203,7 +203,7 @@ const EnterPassword = ({ route }) => {
             <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
                 <StatusBar style="auto" barStyle="dark-content" hidden={false} />
                 <Image source={Logo} style={{ width: 100, height: 150 }} />
-                <Text style={styles.firstText}>Welcome Roberts</Text>
+                <Text style={styles.firstText}>Welcome</Text>
                 <Text style={styles.secondText}>Log In</Text>
                 <View style={[styles.container]} >
                     <Image source={EmailImage} />
