@@ -24,6 +24,7 @@ import TokenGenerate from '../../screen/TokenGenerate';
 import Loading from '../../screen/Loading';
 import EnterPassword from '../../screen/EnterPassword';
 import FAQModal from '../modal/FAQModal';
+import ChangePassword from '../../screen/ChangePassword';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -35,6 +36,7 @@ const AppNavigation = () => {
                 <Stack.Screen name="Modal" component={FAQModal} options={{ headerShown: false }} />
                 <Stack.Screen name="Welcome" component={WelcomeScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Loading" component={Loading} options={{ headerShown: false }} />
+                <Stack.Screen name="ChangePassword" component={ChangePassword} options={{ headerShown: false }} />
                 <Stack.Screen name="EnterPassword" component={EnterPassword} options={{ headerShown: false }} />
                 <Stack.Screen name="Activation" component={ActivationScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Reactivation" component={ReactivationScreen} options={{ headerShown: false }} />

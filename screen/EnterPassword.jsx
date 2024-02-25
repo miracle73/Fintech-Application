@@ -1,6 +1,7 @@
 import { View, TextInput, Text, StyleSheet, TouchableOpacity, Image, ImageBackground, ActivityIndicator, Modal } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { MaterialIcons } from '@expo/vector-icons'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StatusBar } from 'expo-status-bar';
 import HidePassword from '../assets/images/hidePassword.png'
 import PasswordImage from '../assets/images/pass.png'
@@ -13,6 +14,7 @@ import Notification from '../components/Notification';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import SuccessModal from '../components/modal/SuccessModal';
 import { useAuth } from '../utils/AuthContext';
+import FetchApi from '../utils/ApiService'
 
 const EnterPassword = ({ route }) => {
     const [email, setEmail] = useState("");
@@ -27,31 +29,36 @@ const EnterPassword = ({ route }) => {
     const [notification, setNotification] = useState({ type: '', message: '', visible: false, });
 
     const allFieldsFilled = password !== "" && email !== "";
-   
+
     const validateEmail = (email) => {
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return emailRegex.test(email);
     };
 
-   
+
     const validatePassword = (password) => {
         const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
         return passwordRegex.test(password);
     };
 
-  
+    console.log(user.password)
+    console.log(user)
     const isPasswordMatch = (password) => {
-       
+
         return password === user.password;
     };
     const { modall } = route.params || {};
-
+    const { info } = route.params || {};
     useEffect(() => {
         if (modall === 'Success') {
             setModal(true);
-           
+
         }
     }, [modall]);
+
+
+
+
 
 
     const handleSubmit = async (email, password) => {
@@ -65,21 +72,21 @@ const EnterPassword = ({ route }) => {
         setEmailError("");
         setPasswordError("");
 
-       
+
         if (!validateEmail(email)) {
             setEmailError("Invalid email format.");
             setEmail("")
             setPassword("")
-            setIsLoading(false); 
+            setIsLoading(false);
             return;
         }
 
-     
+
         if (!validatePassword(password)) {
             setPasswordError("Password must be at least  8 characters long, include a number, and a special character.");
             setEmail("")
             setPassword("")
-            setIsLoading(false); 
+            setIsLoading(false);
             return;
         }
 
@@ -87,55 +94,105 @@ const EnterPassword = ({ route }) => {
             setPasswordError("Password does not match user's password.");
             setEmail("")
             setPassword("")
-            setIsLoading(false); 
+            setIsLoading(false);
             return;
         }
+        // try {
+        //     const response = await fetch(url, {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             // 'Authorization': 'Bearer 3443|IGX3xJjvqT7Bej62irZQwWf2Mq3ZSmx2cuZYsyGS'
+        //         },
+        //     body: JSON.stringify(data)
+        // });
+
+        // if (!response.ok) {
+
+        //     const errorData = await response.text();
+
+        //     throw new Error(errorData.message || 'An error occurred while activating the token.');
+        // }
+
+
+        // const responseData = await response.json();
+        // console.log(responseData);
+        // navigation.navigate('Loading', {
+        //     next: "Home",
+        //     info: "Setting up password"
+        //     })
+        //     setUser({
+        //         ...user,
+        //         Authtoken: responseData.data.token,
+        //         ...responseData.data.user
+        //     });
+        //     await AsyncStorage.setItem('HAS_SIGNED_UP', 'true');
+
+        // } catch (error) {
+
+        //     setNotification({ type: 'error', message: error.message, visible: true });
+
+        // } finally {
+        //     setIsLoading(false);
+
+
+        //     setPassword('');
+        //     setEmail('');
+        // }
+
         try {
-            const response = await fetch(url, {
+            // Use FetchApi for the request
+            const response = await FetchApi(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    // 'Authorization': 'Bearer 3443|IGX3xJjvqT7Bej62irZQwWf2Mq3ZSmx2cuZYsyGS'
+                   
                 },
                 body: JSON.stringify(data)
             });
 
-            if (!response.ok) {
-             
-                const errorData = await response.text(); 
-    
-                throw new Error(errorData.message || 'An error occurred while activating the token.');
+
+            if (response.error) {
+                throw new Error(response.errorMessage || 'An error occurred while activating the token.');
+            }
+            // console.log(response)
+          
+
+
+            if (info === 'Login') {
+                navigation.navigate('TokenGenerate')
+            } else {
+                const userDetails = {
+                    ...user,
+                    Authtoken: response.data.token,
+                    password: password,
+                    confirmPassword: password
+                 
+                };
+                await AsyncStorage.setItem('userDetails', JSON.stringify(userDetails));
+                await AsyncStorage.setItem('HAS_SIGNED_UP', 'true');
+                navigation.navigate('Loading', {
+                    next: "Home",
+                    info: "Logging in..."
+                })
+
             }
 
-      
-            const responseData = await response.json();
-            console.log(responseData);
-            navigation.navigate('Loading', {
-                next: "Home",
-                info: "Setting up password"
-            })
-            setUser({
-                ...user,
-                Authtoken: responseData.data.token,
-                ...responseData.data.user
-            });
-        
         } catch (error) {
-     
+
             setNotification({ type: 'error', message: error.message, visible: true });
-      
+            console.error(error);
         } finally {
             setIsLoading(false);
-
-      
             setPassword('');
             setEmail('');
+
         }
     };
 
 
 
- 
+
     return (
         <ImageBackground style={{
             flex: 1,
@@ -224,7 +281,7 @@ const styles = StyleSheet.create({
         fontWeight: "800",
         fontStyle: "normal",
         color: "#030F0D",
-        marginBottom: 30
+        marginBottom: 10
     },
 
     secondText: {
@@ -232,7 +289,7 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         fontStyle: "normal",
         color: "#090A0A",
-        marginBottom: 30
+        marginBottom: 10
     },
     thirdText: {
         fontWeight: '400',

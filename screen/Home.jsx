@@ -15,7 +15,8 @@ const Home = ({route}) => {
 
       
     const [modalTimer, setModalTimer] = useState(null);
-
+    
+    console.log(user)
     useEffect(() => {
         const timer = setTimeout(() => {
             setModal(true);
@@ -46,7 +47,7 @@ const Home = ({route}) => {
         };
     }, [modalTimer]);
 
-
+   console.log(user.serial)
     return (
         <View style={{
             flex: 1,
@@ -58,7 +59,7 @@ const Home = ({route}) => {
             <Text style={styles.thirdText}>Home</Text>
             <Text style={styles.secondText}>Serial number</Text>
             <View style={[styles.container]} >
-                <Text style={[styles.firstText]}>{user.serial}</Text>
+                <Text style={[styles.firstText]}>{user?.serial}</Text>
                 <View style={styles.secondContainer}>
                     <Image source={Copy} />
                     <Text style={styles.fifthText}>Copy to clipboard</Text>

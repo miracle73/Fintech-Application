@@ -1,5 +1,6 @@
 import { View, Switch, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialIcons } from '@expo/vector-icons'
 import { TextInput } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
@@ -15,7 +16,7 @@ import { useAuth } from '../utils/AuthContext';
 import { ScrollView } from 'react-native';
 import FetchApi from '../utils/ApiService'
 
-const Password = () => {
+const ChangePassword = () => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [isEnabled, setIsEnabled] = useState(false);
@@ -50,14 +51,14 @@ const Password = () => {
     };
 
 
-    const isPasswordMatch = (password,confirmPassword) => {
+    const isPasswordMatch = (password, confirmPassword) => {
         return password === confirmPassword;
     };
     const handleSubmit = async (password, confirmPassword) => {
-        const url = 'https://beelsfinance.com/api/api/v1/token/password/set';
+        const url = 'https://beelsfinance.com/api/api/v1/user/token/password/change';
         const headers = {
             'Content-Type': 'application/json',
-            // 'Authorization': 'Bearer 3443|IGX3xJjvqT7Bej62irZQwWf2Mq3ZSmx2cuZYsyGS'
+            'Authorization': `Bearer ${user.Authtoken}`
         };
         const data = {
             password: password,
@@ -91,7 +92,7 @@ const Password = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    
+                    'Authorization': `Bearer ${user.Authtoken}`
                 },
                 body: JSON.stringify(data)
             });
@@ -101,7 +102,7 @@ const Password = () => {
             // console.log(response)
             navigation.navigate('Loading', {
                 next: "EnterPassword",
-                info: "Setting up password "
+                info: "Changing password "
             })
             setUser({
                 ...user,
@@ -175,7 +176,7 @@ const Password = () => {
 
                     <Text style={styles.secondText}>Settings</Text>
                 </View>
-                <Text style={styles.firstText}>Set-up Password</Text>
+                <Text style={styles.firstText}>Change Password</Text>
                 <View style={[styles.container]} >
                     <Image source={PasswordImage} />
                     <TextInput
@@ -269,7 +270,7 @@ const Password = () => {
                     </View>
                 ) : (
                     <TouchableOpacity style={[styles.button, allFieldsFilled && { backgroundColor: '#082C25' }]} onPress={() => handleSubmit(password, confirmPassword)}>
-                        <Text style={styles.sixthText}>Set-up password</Text>
+                        <Text style={styles.sixthText}>Change password</Text>
                     </TouchableOpacity>
                 )}
 
@@ -393,4 +394,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default Password
+export default ChangePassword

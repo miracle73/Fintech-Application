@@ -4,7 +4,7 @@
     "slug": "token",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/splash-logo-token.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash-logo-token.png",
@@ -15,15 +15,24 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "icon": "./assets/splash-logo-token.png"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/splash-logo-token.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.digitstech.token"
     },
+    "plugins": [
+      [
+        "expo-updates",
+        {
+          "username": "digitstech"
+        }
+      ]
+    ],
     "web": {
       "favicon": "./assets/favicon.png"
     },

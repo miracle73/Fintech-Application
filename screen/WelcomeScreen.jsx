@@ -86,7 +86,7 @@ const WelcomeScreen = () => {
                         <Text style={styles.fifthText}>Terms and Conditions and Privacy Policy</Text>
                     </View>
                 </View>
-                <TouchableOpacity style={styles.button} onPress={() => {signedUp ? navigation.navigate('EnterPassword') : setModal(true)}}>
+                <TouchableOpacity style={styles.button} onPress={() => {signedUp ? navigation.navigate('EnterPassword', { info: 'Login' }) : setModal(true)}}>
                     <Text style={styles.sixthText}>Continue</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setSecondModal(true)}>

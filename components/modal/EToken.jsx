@@ -17,7 +17,7 @@ const EToken = ({ setModal, modal }) => {
       }}
     >
       <View style={styles.modalContainer}>
-        <Image source={ModalImage} />
+        <Image source={ModalImage} style={{marginTop: 20}}/>
         <Text style={styles.firstText}>Beels E-Token is activated</Text>
         <Text style={styles.secondText}>Your Beels e-token has been successfully activated. Kindly enter your serial number to link your token.</Text>
         <TouchableOpacity style={[styles.button]} onPress={() => {navigation.navigate('Bottom'); setModal(false)}}>
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     elevation: 10,
     position: 'absolute',
-    height: height * 0.35,
+    height: height * 0.50,
     bottom: height * 0.3,
     borderRadius: 30,
     paddingHorizontal: 20,

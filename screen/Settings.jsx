@@ -38,7 +38,7 @@ const Settings = () => {
                     <Image source={Password} />
                     <Text style={styles.secondText}>Change Password</Text>
                 </View>
-                <TouchableOpacity onPress={() => navigation.navigate('Password')}>
+                <TouchableOpacity onPress={() => navigation.navigate('ChangePassword')}>
                     <MaterialIcons name="arrow-forward-ios" color="#000" size={20} />
                 </TouchableOpacity>
 

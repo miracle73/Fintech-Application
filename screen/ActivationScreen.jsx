@@ -12,6 +12,8 @@ import { useNavigation } from '@react-navigation/native';
 import SuccessModal from '../components/modal/SuccessModal';
 import LoggedInModal from '../components/modal/LoggedInModal';
 import { postRequest } from '../utils/ApiService';
+import FetchApi from '../utils/ApiService'
+
 
 
 
@@ -42,38 +44,32 @@ const ActivationScreen = ({ route }) => {
         };
         setIsLoading(true);
         try {
-            const response = await fetch(url, {
+            // Use FetchApi for the request
+            const response = await FetchApi(url, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                 
                 },
-                body: JSON.stringify(data)
-            });
+            body: JSON.stringify(data)
+        });
 
-            if (!response.ok) {
-                // Handle server errors
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'An error occurred while activating the token.');
+            // Check if the request was successful
+            if (response.error) {
+                throw new Error(response.errorMessage || 'An error occurred while activating the token.');
             }
 
-            // Handle successful response
-            const responseData = await response.json();
-
-            // const { data } = responseData
-            console.log(responseData);
-            const userDetails = responseData.data;
-  
+            // Save the user details to AsyncStorage
+            const userDetails = response.data;
             await AsyncStorage.setItem('userDetails', JSON.stringify(userDetails));
-            await AsyncStorage.setItem('HAS_SIGNED_UP', 'true'); 
 
+            // Navigate to the next screen
             navigation.navigate('Loading', {
                 next: "Activation",
                 info: "Activating your Beels e-Token"
-            })
-        
-
+            });
         } catch (error) {
-       
+
             setNotification({ type: 'error', message: error.message, visible: true });
             console.error(error);
         } finally {
@@ -91,7 +87,7 @@ const ActivationScreen = ({ route }) => {
 
     useEffect(() => {
         if (modall === 'Etoken') {
-      
+
             setModal(true)
         }
     }, [modall]);
@@ -123,7 +119,6 @@ const ActivationScreen = ({ route }) => {
                         value={serialNumber}
                         onChangeText={setSerialNumber}
                         placeholderTextColor="#7B7B7B"
-                        keyboardType='numeric'
                         secureTextEntry={!showPassword}
                     />
                     <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={{ padding: 10 }}>
@@ -137,7 +132,6 @@ const ActivationScreen = ({ route }) => {
                         value={activationCode}
                         onChangeText={setActivationCode}
                         placeholderTextColor="#7B7B7B"
-                        keyboardType='numeric'
                         secureTextEntry={!secondShowPassword}
 
                     />
@@ -166,7 +160,6 @@ const ActivationScreen = ({ route }) => {
                         value={transactionPin}
                         onChangeText={setTransactionPin}
                         placeholderTextColor="#7B7B7B"
-                        keyboardType='numeric'
                         secureTextEntry={!fourthShowPassword}
                     />
                     <TouchableOpacity onPress={() => setFourthShowPassword(!fourthShowPassword)} style={{ padding: 10 }}>
@@ -174,7 +167,7 @@ const ActivationScreen = ({ route }) => {
                     </TouchableOpacity>
                 </View>
                 {isLoading ? (
-                    <View style={{ marginTop: 250 }}>
+                    <View style={{ marginTop: 150 }}>
                         <View style={{ marginBottom: 10 }}>
                             <ActivityIndicator size="large" color="#3ab54a" />
                             <Text style={{ textAlign: 'center' }}>Loading...</Text>
@@ -244,7 +237,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: '#B2BEBB',
         borderRadius: 14,
-        marginTop: 250
+        marginTop: 150
     },
     fifthText: {
         fontWeight: '600',

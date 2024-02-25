@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: '#B2BEBB',
         borderRadius: 14,
-        marginTop: 300
+        marginTop: 200
     },
 })
 export default MethodModal
